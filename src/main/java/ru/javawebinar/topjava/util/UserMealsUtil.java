@@ -7,10 +7,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.Month;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UserMealsUtil {
     public static void main(String[] args) {
@@ -30,6 +27,19 @@ public class UserMealsUtil {
     public static List<UserMealWithExceed> getFilteredWithExceeded(List<UserMeal> mealList, LocalTime startTime, LocalTime endTime, int caloriesPerDay) {
         // TODO return filtered list with correctly exceeded field
         List<UserMealWithExceed> list = new ArrayList<>();
-        return null;
+        Map<LocalDate,Integer> map = new HashMap<>();
+        for(UserMeal userMeal : mealList){
+            map.merge(userMeal.getDateTime().toLocalDate(),userMeal.getCalories(),(a,b) -> a + b);
+        }
+        for(UserMeal userMeal : mealList){
+            if (TimeUtil.isBetween(userMeal.getDateTime().toLocalTime(),startTime,endTime)) {
+                if(map.get(userMeal.getDateTime().toLocalDate())> caloriesPerDay){
+                    list.add(new UserMealWithExceed(userMeal.getDateTime(),userMeal.getDescription(),userMeal.getCalories(),true));
+                }else {
+                    list.add(new UserMealWithExceed(userMeal.getDateTime(), userMeal.getDescription(), userMeal.getCalories(), false));
+                }
+            }
+        }
+        return list;
     }
 }
