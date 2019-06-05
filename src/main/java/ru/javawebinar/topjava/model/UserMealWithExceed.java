@@ -9,20 +9,20 @@ public class UserMealWithExceed {
 
     private final int calories;
 
-    private final boolean exceed;
+    private final Flag flag;
 
-    public UserMealWithExceed(LocalDateTime dateTime, String description, int calories, boolean exceed) {
+    public UserMealWithExceed(LocalDateTime dateTime, String description, int calories, Flag flag) {
         this.dateTime = dateTime;
         this.description = description;
         this.calories = calories;
-        this.exceed = exceed;
+        this.flag = flag;
     }
 
-    public UserMealWithExceed(UserMeal userMeal,boolean exceed){
+    public UserMealWithExceed(UserMeal userMeal,Flag flag){
         this.dateTime = userMeal.getDateTime();
         this.description = userMeal.getDescription();
         this.calories = userMeal.getCalories();
-        this.exceed = exceed;
+        this.flag = flag;
     }
 
     @Override
@@ -31,7 +31,7 @@ public class UserMealWithExceed {
                 "dateTime=" + dateTime +
                 ", description='" + description + '\'' +
                 ", calories=" + calories +
-                ", exceed=" + exceed +
+                ", exceed=" + flag +
                 '}';
     }
 }
