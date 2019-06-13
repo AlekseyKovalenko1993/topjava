@@ -1,21 +1,17 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <html>
 <head>
-    <c:set var = "action" value="add"/>
-    <c:when test="${param.action eq action}">
-        <title>Add</title>
-    </c:when>
-    <c:otherwise>
-        <title>Edit</title>
-    </c:otherwise>
+    <c:if test="${param.action == 'add'}">
+        <h1 align="center">Add</h1>
+        <c:url value="/meals?action=add" var="var"/>
+    </c:if>
+    <c:if test="${param.action == 'edit'}">
+        <h1 align="center">Edit</h1>
+        <c:url value="/meals?action=edit&id=${param.id}" var="var"/>
+    </c:if>
 </head>
 <body>
-<c:when test="${empty id}">
-    <h2>Add Meal</h2>
-</c:when>
-<c:otherwise>
-    <h2>Edit Meal</h2>
-</c:otherwise>
 </body>
 </html>

@@ -1,8 +1,9 @@
 package ru.javawebinar.topjava.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class MealTo {
+public class MealTo implements Serializable {
     private  LocalDateTime dateTime;
 
     private  String description;
