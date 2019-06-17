@@ -22,15 +22,15 @@ public class MealServiceImpl implements MealService {
         this.repository = repository;
     }
 
-    @Override
-    public Meal create(Meal meal) {
-        return repository.save(meal);
+    public MealRepository getRepository() {
+        return repository;
     }
 
     @Override
-    public Meal update(Meal meal) {
-        return ValidationUtil.checkNotFoundWithId(meal,meal.getId());
+    public Meal save(Meal meal) {
+        return ValidationUtil.checkNotFoundWithId(repository.save(meal),meal.getId());
     }
+
 
     @Override
     public void delete(int id, int userId) throws NotFoundException {

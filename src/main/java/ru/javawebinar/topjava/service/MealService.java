@@ -7,9 +7,7 @@ import ru.javawebinar.topjava.util.exception.NotFoundException;
 import java.util.List;
 
 public interface MealService {
-    Meal create(Meal meal);
-
-    Meal update(Meal meal);
+    Meal save(Meal meal);
 
     void delete(int id, int userId) throws NotFoundException;
 
