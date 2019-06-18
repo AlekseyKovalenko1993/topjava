@@ -44,11 +44,13 @@ public class MealRestController {
     public Meal create(Meal meal){
         log.info("create {}",meal);
         checkNew(meal);
+        meal.setUserId(SecurityUtil.authUserId());
         return service.save(meal);
     }
 
     public void update(Meal meal,int id){
         log.info("update {}",meal);
+        meal.setUserId(SecurityUtil.authUserId());
         assureIdConsistent(meal,id);
         service.save(meal);
     }
