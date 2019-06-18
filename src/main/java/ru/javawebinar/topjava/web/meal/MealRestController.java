@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.web.meal;
 
 import com.sun.xml.internal.ws.developer.MemberSubmissionAddressing;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,8 +58,12 @@ public class MealRestController {
         service.save(meal);
     }
 
-    public List<MealTo> getFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime){
+    public List<MealTo> getFiltered(String startDateStr, String endDateStr, String startTimeStr, String endTimeStr){
         log.info("getFiltered {}");
+        LocalDate startDate = StringUtils.isBlank(startDateStr) ? LocalDate.MIN : LocalDate.parse(startDateStr);
+        LocalDate endDate = StringUtils.isBlank(endDateStr) ? LocalDate.MAX : LocalDate.parse(endDateStr);
+        LocalTime startTime = StringUtils.isBlank(startTimeStr) ? LocalTime.MIN : LocalTime.parse(startTimeStr);
+        LocalTime endTime = StringUtils.isBlank(endTimeStr) ? LocalTime.MAX : LocalTime.parse(endTimeStr);
         return service.getFiltered(startDate,endDate,startTime,endTime,SecurityUtil.authUserId(),SecurityUtil.authUserCaloriesPerDay());
     }
 }

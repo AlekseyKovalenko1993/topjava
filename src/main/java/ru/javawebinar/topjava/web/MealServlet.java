@@ -33,14 +33,22 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
     private MealRestController controller;
+    ConfigurableApplicationContext appCtx;
 
-    {
-        try (ConfigurableApplicationContext appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml")) {
-            controller = appCtx.getBean(MealRestController.class);
-        }
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        appCtx = new ClassPathXmlApplicationContext("spring/spring-app.xml");
+        controller = appCtx.getBean(MealRestController.class);
     }
 
-
+    @Override
+    public void destroy() {
+        super.destroy();
+        appCtx.close();
+    }
+    
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -92,11 +100,7 @@ public class MealServlet extends HttpServlet {
                 break;
             case "filter":
                 log.info("filter");
-                LocalDate startDate = StringUtils.isBlank(startDateStr) ? LocalDate.MIN : LocalDate.parse(startDateStr);
-                LocalDate endDate = StringUtils.isBlank(endDateStr) ? LocalDate.MAX : LocalDate.parse(endDateStr);
-                LocalTime startTime = StringUtils.isBlank(startTimeStr) ? LocalTime.MIN : LocalTime.parse(startTimeStr);
-                LocalTime endTime = StringUtils.isBlank(endTimeStr) ? LocalTime.MAX : LocalTime.parse(endTimeStr);
-                request.setAttribute("meals",controller.getFiltered(startDate,endDate,startTime,endTime));
+                request.setAttribute("meals",controller.getFiltered(startDateStr,endDateStr ,startTimeStr,endTimeStr));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
             case "all":
