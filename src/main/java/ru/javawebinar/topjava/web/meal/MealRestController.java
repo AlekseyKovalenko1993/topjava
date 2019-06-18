@@ -11,6 +11,8 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.ValidationUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.*;
@@ -53,5 +55,10 @@ public class MealRestController {
         meal.setUserId(SecurityUtil.authUserId());
         assureIdConsistent(meal,id);
         service.save(meal);
+    }
+
+    public List<MealTo> getFiltered(LocalDate startDate, LocalDate endDate, LocalTime startTime, LocalTime endTime){
+        log.info("getFiltered {}");
+        return service.getFiltered(startDate,endDate,startTime,endTime,SecurityUtil.authUserId(),SecurityUtil.authUserCaloriesPerDay());
     }
 }

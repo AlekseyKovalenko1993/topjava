@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.web;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Objects;
@@ -63,6 +66,14 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
+        String startDateStr = request.getParameter("startDate");
+        String endDateStr = request.getParameter("endDate");
+        String startTimeStr = request.getParameter("startTime");
+        String endTimeStr = request.getParameter("endTime");
+
+        if(!StringUtils.isAllBlank(startDateStr,endDateStr,startTimeStr,endTimeStr)){
+            action = "filter";
+        }
 
         switch (action == null ? "all" : action) {
             case "delete":
@@ -79,6 +90,15 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
+            case "filter":
+                log.info("filter");
+                LocalDate startDate = StringUtils.isBlank(startDateStr) ? LocalDate.MIN : LocalDate.parse(startDateStr);
+                LocalDate endDate = StringUtils.isBlank(endDateStr) ? LocalDate.MAX : LocalDate.parse(endDateStr);
+                LocalTime startTime = StringUtils.isBlank(startTimeStr) ? LocalTime.MIN : LocalTime.parse(startTimeStr);
+                LocalTime endTime = StringUtils.isBlank(endTimeStr) ? LocalTime.MAX : LocalTime.parse(endTimeStr);
+                request.setAttribute("meals",controller.getFiltered(startDate,endDate,startTime,endTime));
+                request.getRequestDispatcher("/meals.jsp").forward(request, response);
+                break;
             case "all":
             default:
                 log.info("getAll");
@@ -90,7 +110,6 @@ public class MealServlet extends HttpServlet {
 
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));
-        System.out.println(paramId);
         return Integer.parseInt(paramId);
     }
 }
