@@ -33,7 +33,7 @@ public class MealServlet extends HttpServlet {
     private static final Logger log = LoggerFactory.getLogger(MealServlet.class);
 
     private MealRestController controller;
-    ConfigurableApplicationContext appCtx;
+    private ConfigurableApplicationContext appCtx;
 
 
     @Override
@@ -74,14 +74,7 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
-        String startDateStr = request.getParameter("startDate");
-        String endDateStr = request.getParameter("endDate");
-        String startTimeStr = request.getParameter("startTime");
-        String endTimeStr = request.getParameter("endTime");
 
-        if(!StringUtils.isAllBlank(startDateStr,endDateStr,startTimeStr,endTimeStr)){
-            action = "filter";
-        }
 
         switch (action == null ? "all" : action) {
             case "delete":
@@ -100,6 +93,10 @@ public class MealServlet extends HttpServlet {
                 break;
             case "filter":
                 log.info("filter");
+                String startDateStr = request.getParameter("startDate");
+                String endDateStr = request.getParameter("endDate");
+                String startTimeStr = request.getParameter("startTime");
+                String endTimeStr = request.getParameter("endTime");
                 request.setAttribute("meals",controller.getFiltered(startDateStr,endDateStr ,startTimeStr,endTimeStr));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;

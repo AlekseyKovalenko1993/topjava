@@ -24,6 +24,7 @@
     <a href="meals?action=create">Add Meal</a>
     <br><br>
     <form method="get" action="meals">
+        <input type="hidden" name="action" value="filter">
         <dl>
             <dt>Date:</dt>
             <dd><input type="date" name="startDate"></dd>
