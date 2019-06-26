@@ -3,10 +3,10 @@ package ru.javawebinar.topjava.util;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.sql.Timestamp;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.sql.Date;
 
 public class DateTimeUtil {
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
@@ -37,5 +37,17 @@ public class DateTimeUtil {
 
     public static LocalTime parseLocalTime(@Nullable String str) {
         return StringUtils.isEmpty(str) ? null : LocalTime.parse(str);
+    }
+
+    public static Timestamp convertLocalDateTimeToDate(LocalDateTime localDateTimeToConvert){
+        return Timestamp.valueOf(localDateTimeToConvert);
+    }
+
+    public static Timestamp convertLocalDateTimeToDateWithoutTime(LocalDateTime localDateTimeToConvert){
+        return Timestamp.valueOf(localDateTimeToConvert.toLocalDate().atStartOfDay());
+    }
+
+    public static LocalDateTime convertDateToLocalDateTime(Timestamp timestampToConvert){
+        return timestampToConvert.toLocalDateTime();
     }
 }
