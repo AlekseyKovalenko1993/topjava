@@ -1,19 +1,36 @@
 package ru.javawebinar.topjava.model;
 
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+@Entity
+@Table(name = "meals",uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","date_time"}, name = "user_date_time_unique_idx")})
 public class Meal extends AbstractBaseEntity {
+
+    @NotBlank
+    @Column(name = "date_time",nullable = false,columnDefinition = "timestamp default now()")
     private LocalDateTime dateTime;
 
+    @NotBlank
+    @Size(max = 255)
+    @Column(name = "description",nullable = false)
     private String description;
 
+
+    @Min(value = 1)
+    @Max(value = 5000)
+    @Column(name = "calories",nullable = false,columnDefinition = "amount calories of meal")
     private int calories;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @NotBlank
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "user_id",referencedColumnName = "id",nullable = false)
     private User user;
 
     public Meal() {
