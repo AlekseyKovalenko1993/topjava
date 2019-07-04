@@ -10,8 +10,18 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Entity
+@NamedQueries({
+       @NamedQuery(name = "delete",query ="DELETE FROM Meal m WHERE m.id=:id AND m.user.id=:userId"),
+       @NamedQuery(name = "get",query ="SELECT m FROM Meal m WHERE m.id=:id AND m.user.id=:userId"),
+       @NamedQuery(name = "getAll",query ="SELECT m FROM Meal m WHERE m.user.id=:userId ORDER BY m.dateTime DESC"),
+       @NamedQuery(name = "getBetween",query ="SELECT m FROM Meal m WHERE m.dateTime>=:startDate AND m.dateTime<=:endDate AND m.user.id=:userId ORDER BY m.dateTime DESC")
+})
 @Table(name = "meals",uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","date_time"}, name = "user_date_time_unique_idx")})
 public class Meal extends AbstractBaseEntity {
+    public static final String DELETE = "delete";
+    public static final String GET = "get";
+    public static final String GETALL = "getAll";
+    public static final String GETBETWEEN = "getBetween";
 
     @NotBlank
     @Column(name = "date_time",nullable = false,columnDefinition = "timestamp default now()")
