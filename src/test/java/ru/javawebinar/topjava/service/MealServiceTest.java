@@ -1,7 +1,15 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.AfterClass;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.junit.rules.TestRule;
+import org.junit.runner.Description;
 import org.junit.runner.RunWith;
+import org.junit.runners.model.Statement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -11,8 +19,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import javax.persistence.NoResultException;
+import java.lang.reflect.MalformedParameterizedTypeException;
 import java.time.LocalDate;
 import java.time.Month;
+import java.util.HashMap;
+import java.util.Map;
 
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -28,6 +40,19 @@ public class MealServiceTest {
 
     @Autowired
     private MealService service;
+
+    private static Map<String,Long> durationOfTests = new HashMap<>();
+
+    @Rule
+    public final ExpectedException thrown = ExpectedException.none();
+
+    @Rule
+    public final RuleTime ruleTime = new RuleTime();
+
+    @AfterClass
+    public static void printDuraction(){
+        durationOfTests.forEach((k,v) -> System.out.println(k + " - " + v));
+    }
 
     @Test
     public void delete() throws Exception {
@@ -60,13 +85,15 @@ public class MealServiceTest {
         assertMatch(actual, ADMIN_MEAL1);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void getNotFound() throws Exception {
+        thrown.expect(NoResultException.class);
         service.get(1, USER_ID);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void getNotOwn() throws Exception {
+        thrown.expect(NoResultException.class);
         service.get(MEAL1_ID, ADMIN_ID);
     }
 
@@ -77,9 +104,10 @@ public class MealServiceTest {
         assertMatch(service.get(MEAL1_ID, USER_ID), updated);
     }
 
-    @Test(expected = NotFoundException.class)
+    @Test
     public void updateNotFound() throws Exception {
-        service.update(MEAL1, ADMIN_ID);
+        thrown.expect(NotFoundException.class);
+        service.update(MEAL1,ADMIN_ID);
     }
 
     @Test
@@ -92,5 +120,24 @@ public class MealServiceTest {
         assertMatch(service.getBetweenDates(
                 LocalDate.of(2015, Month.MAY, 30),
                 LocalDate.of(2015, Month.MAY, 30), USER_ID), MEAL3, MEAL2, MEAL1);
+    }
+
+    private class RuleTime implements TestRule{
+
+        @Override
+        public Statement apply(Statement base, Description description) {
+            Logger logger = LoggerFactory.getLogger(MealServiceTest.class);
+            return new Statement() {
+                @Override
+                public void evaluate() throws Throwable {
+                    long startTime = System.currentTimeMillis();
+                    base.evaluate();
+                    long finishTime = System.currentTimeMillis();
+                    long duration = finishTime - startTime;
+                    logger.debug("duration is {} ms",duration);
+                    durationOfTests.put(description.getMethodName(),duration);
+                }
+            };
+        }
     }
 }
