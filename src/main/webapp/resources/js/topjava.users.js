@@ -3,31 +3,31 @@ $(function () {
     makeEditable({
             ajaxUrl: "ajax/admin/users/",
             datatableApi: $("#datatable").DataTable({
-                "paging": false,
-                "info": true,
-                "columns": [
+                "paging" : false,
+                "info" : true,
+                "columns" : [
                     {
-                        "data": "name"
+                        "data" : "name"
                     },
                     {
-                        "data": "email"
+                        "data" : "email"
                     },
                     {
-                        "data": "roles"
+                        "data" : "roles"
                     },
                     {
-                        "data": "enabled"
+                        "data" : "enabled"
                     },
                     {
-                        "data": "registered"
+                        "data" : "registered"
                     },
                     {
-                        "defaultContent": "Edit",
-                        "orderable": false
+                        "defaultContent" : "Edit",
+                        "orderable" : false
                     },
                     {
-                        "defaultContent": "Delete",
-                        "orderable": false
+                        "defaultContent" : "Delete",
+                        "orderable" : false
                     }
                 ],
                 "order": [

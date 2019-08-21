@@ -9,7 +9,8 @@
 <script type="text/javascript" src="resources/js/topjava.meals.js" defer></script>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 
-<section>
+<div class="jumbotron pt-4">
+    <div class="container">
     <h3><spring:message code="meal.title"/></h3>
 
     <form method="get" action="meals/filter">
@@ -56,11 +57,12 @@
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
                 <td><a><span class="fa fa-pencil"></span></a></td>
-                <td><a class="delete" id="${meal.id}"><span class="fa fa-remove"></span></a></td>
+                <td><a onclick="deleteById(${meal.id})"><span class="fa fa-remove"></span></a></td>
             </tr>
         </c:forEach>
-    </table>
-</section>
+        </table>
+    </div>
+</div>
 
 <div class="modal fade" tabindex="-1" id="editRow">
     <div class="modal-dialog">
