@@ -5,9 +5,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.web.SecurityUtil;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @RestController
@@ -37,10 +39,11 @@ public class MealAjaxController extends AbstractMealController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void createUpdate(@RequestParam int id,
-                             @RequestParam LocalDateTime dateTime,
+    public void createUpdate(@RequestParam Integer id,
+                             @RequestParam String dateTimeStr,
                              @RequestParam String description,
-                             @RequestParam int calories){
+                             @RequestParam Integer calories){
+        LocalDateTime dateTime = LocalDateTime.parse(dateTimeStr, DateTimeFormatter.ISO_DATE_TIME);
         Meal meal = new Meal(id,dateTime,description,calories);
         if(meal.isNew()){
             super.create(meal);
