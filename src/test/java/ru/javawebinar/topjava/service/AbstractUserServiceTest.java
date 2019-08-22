@@ -1,5 +1,6 @@
 package ru.javawebinar.topjava.service;
 
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,5 +89,14 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     void getAll() throws Exception {
         List<User> all = service.getAll();
         assertMatch(all, ADMIN, USER);
+    }
+
+    @Test
+    void changeEnabled() throws Exception{
+        Assumptions.assumeTrue(isJpaBased(), "Validation not supported (JPA only)");
+        service.changeEnabled(USER_ID,false);
+        User userChange = new User(USER);
+        userChange.setEnabled(false);
+        assertMatch(service.get(USER_ID),userChange);
     }
 }

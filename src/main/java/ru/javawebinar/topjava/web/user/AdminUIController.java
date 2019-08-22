@@ -19,6 +19,12 @@ public class AdminUIController extends AbstractUserController {
     }
 
     @Override
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE, value = "/{id}")
+    public User get(@PathVariable int id) {
+        return super.get(id);
+    }
+
+    @Override
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") int id) {
@@ -30,11 +36,19 @@ public class AdminUIController extends AbstractUserController {
     public void createOrUpdate(@RequestParam("id") Integer id,
                                @RequestParam("name") String name,
                                @RequestParam("email") String email,
-                               @RequestParam("password") String password) {
-
+                               @RequestParam("password") String password)
+    {
         User user = new User(id, name, email, password, Role.ROLE_USER);
         if (user.isNew()) {
             super.create(user);
         }
+    }
+
+    @PostMapping("/enabled")
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void changeEnabled(@RequestParam("id") Integer id,
+                             @RequestParam("enabled") String enabled)
+    {
+       service.changeEnabled(id,Boolean.valueOf(enabled));
     }
 }

@@ -32,6 +32,10 @@ $(document).ready(function () {
     $("#filterBut").click(function () {
         filter();
     });
+
+    $("#filterReset").click(function () {
+        reset();
+    });
 });
 
 function filter() {
@@ -39,6 +43,11 @@ function filter() {
         dataTable.clear().rows.add(data).draw();
     });
 }
+
+function reset() {
+    $("#filter").find(":input").val("");
+}
+
 
 function deleteMealById(id){
     if (confirm('Are you sure?')) {
