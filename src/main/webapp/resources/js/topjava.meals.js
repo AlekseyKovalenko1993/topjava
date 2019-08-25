@@ -1,31 +1,32 @@
-var mealUrl = "ajax/profile/meals/";
-var formFilter = $("#filter");
+let mealUrl = "ajax/profile/meals/";
+let formFilter = $("#filter");
+let table = $("#datatable").DataTable({
+    "paging": false,
+    "info": true,
+    "columns": [
+        {
+            "data": "dateTime"
+        },
+        {
+            "data": "description"
+        },
+        {
+            "data": "calories"
+        },
+        {
+            "defaultContent": "Edit",
+            "orderable": false
+        },
+        {
+            "defaultContent": "Delete",
+            "orderable": false
+        }
+    ]
+});
 $(document).ready(function () {
     makeEditable({
         ajaxUrl: mealUrl,
-        dataTable: $("#datatable").dataTable({
-            "paging": false,
-            "info": true,
-            "columns": [
-                {
-                    "data": "dateTime"
-                },
-                {
-                    "data": "description"
-                },
-                {
-                    "data": "calories"
-                },
-                {
-                    "defaultContent": "Edit",
-                    "orderable": false
-                },
-                {
-                    "defaultContent": "Delete",
-                    "orderable": false
-                }
-            ]
-        })
+        datatableApi: table
         }
     );
 
@@ -40,12 +41,13 @@ $(document).ready(function () {
 
 function filter() {
     $.get(mealUrl + "filter",formFilter.serialize(),function (data) {
-        dataTable.clear().rows.add(data).draw();
+        table.clear().rows.add(data).draw();
     });
 }
 
 function reset() {
     $("#filter").find(":input").val("");
+    updateTable();
 }
 
 
@@ -81,8 +83,8 @@ function saveMeal() {
 function checkUpdateOrFilter() {
     var empty = true;
     $("#filter").find(":input").each(function (){
-        if($(this).val()!=""){
-            empty =false;
+        if($(this).val()!==""){
+            empty = false;
             return false;
         }
     });

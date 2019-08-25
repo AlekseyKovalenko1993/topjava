@@ -34,8 +34,8 @@ function deleteRow(id) {
     });
 }
 
-function updateTable() {
-    $.get(context.ajaxUrl, function (data) {
+function updateTable(dataTo) {
+    $.get(context.ajaxUrl,dataTo, function (data) {
         context.datatableApi.clear().rows.add(data).draw();
     });
 }
