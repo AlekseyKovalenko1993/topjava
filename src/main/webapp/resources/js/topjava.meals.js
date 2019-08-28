@@ -13,8 +13,9 @@ function clearFilter() {
 }
 
 $(function () {
+    $( "#startDate" ).datetimepicker({ dateFormat: 'yy-mm-dd' });
     makeEditable({
-        ajaxUrl: "ajaxUrlMeal",
+        ajaxUrl: ajaxUrlMeal,
         datatableApi: $("#datatable").DataTable({
             "ajax": {
                 "url": ajaxUrlMeal,
@@ -48,12 +49,14 @@ $(function () {
                     "data": "calories"
                 },
                 {
-                    "defaultContent": "Edit",
-                    "orderable": false
+                    "orderable": false,
+                    "defaultContent": "",
+                    "render": renderEditBtn
                 },
                 {
-                    "defaultContent": "Delete",
-                    "orderable": false
+                    "orderable": false,
+                    "defaultContent": "",
+                    "render": renderDeleteBtn
                 }
             ],
             "order": [

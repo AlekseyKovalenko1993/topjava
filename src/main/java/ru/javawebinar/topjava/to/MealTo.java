@@ -13,7 +13,7 @@ public class MealTo extends BaseTo {
     @NotNull
     private LocalDateTime dateTime;
 
-    @Size(min = 5, max = 100, message = "description must not be null")
+    @Size(min = 1, max = 100, message = "description must not be null")
     @NotBlank
     private String description;
 
