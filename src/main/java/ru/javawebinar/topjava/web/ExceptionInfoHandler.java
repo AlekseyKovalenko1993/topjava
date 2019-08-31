@@ -39,6 +39,12 @@ public class ExceptionInfoHandler {
     @ResponseStatus(value = HttpStatus.CONFLICT)  // 409
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
+        Throwable cause = ValidationUtil.getRootCause(e);
+        if(cause.getMessage().contains("email")){
+            e = new DataIntegrityViolationException("User with this email already exists");
+        }else if(cause.getMessage().contains("datetime")){
+            e = new DataIntegrityViolationException("The same datetime");
+        }
         return logAndGetErrorInfo(req, e, true, DATA_ERROR);
     }
 
@@ -47,6 +53,7 @@ public class ExceptionInfoHandler {
     public ErrorInfo illegalRequestDataError(HttpServletRequest req, Exception e) {
         return logAndGetErrorInfo(req, e, false, VALIDATION_ERROR);
     }
+
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(Exception.class)

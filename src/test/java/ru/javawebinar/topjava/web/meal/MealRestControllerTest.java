@@ -102,11 +102,25 @@ class MealRestControllerTest extends AbstractControllerTest {
     void createNotValid() throws Exception {
         Meal created = getCreated();
         created.setCalories(100000);
-        ResultActions action = mockMvc.perform(MockMvcRequestBuilders.post(REST_URL)
+        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(created))
                 .with(userHttpBasic(ADMIN)))
                 .andExpect(status().isUnprocessableEntity());
+    }
+
+    @Test
+    void createTheSameDateTime() throws Exception {
+        Meal created = new Meal(ADMIN_MEAL1.getDateTime(),ADMIN_MEAL1.getDescription(),ADMIN_MEAL1.getCalories());
+        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(created))
+                .with(userHttpBasic(ADMIN)));
+        mockMvc.perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(JsonUtil.writeValue(created))
+                .with(userHttpBasic(ADMIN)))
+                .andExpect(status().isOk());
     }
 
     @Test
