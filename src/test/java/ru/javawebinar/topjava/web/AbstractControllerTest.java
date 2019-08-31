@@ -15,6 +15,7 @@ import ru.javawebinar.topjava.repository.JpaUtil;
 import ru.javawebinar.topjava.service.UserService;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.EntityManager;
 
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 
@@ -40,6 +41,9 @@ abstract public class AbstractControllerTest {
 
     @Autowired
     private CacheManager cacheManager;
+
+    @Autowired
+    protected EntityManager entityManager;
 
     @Autowired(required = false)
     private JpaUtil jpaUtil;

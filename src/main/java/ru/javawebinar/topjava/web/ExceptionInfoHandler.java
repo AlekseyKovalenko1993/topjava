@@ -40,9 +40,9 @@ public class ExceptionInfoHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ErrorInfo conflict(HttpServletRequest req, DataIntegrityViolationException e) {
         Throwable cause = ValidationUtil.getRootCause(e);
-        if(cause.getMessage().contains("email")){
+        if(cause.toString().contains("email")){
             e = new DataIntegrityViolationException("User with this email already exists");
-        }else if(cause.getMessage().contains("datetime")){
+        }else if(cause.toString().contains("datetime")){
             e = new DataIntegrityViolationException("The same datetime");
         }
         return logAndGetErrorInfo(req, e, true, DATA_ERROR);
